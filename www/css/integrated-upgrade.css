@@ -1,0 +1,376 @@
+
+/* =========================================================
+   PRODUCTIVITY APP - INTEGRATED UPGRADE STYLES
+   Original purple theme preserved.
+   ========================================================= */
+
+.pu-modal-host {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 18px;
+    font-family: inherit;
+}
+
+.pu-modal-host.pu-visible {
+    display: flex;
+}
+
+.pu-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(22, 18, 48, 0.58);
+    backdrop-filter: blur(3px);
+}
+
+.pu-modal {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 520px);
+    max-height: 88vh;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 22px;
+    padding: 25px 21px;
+    box-shadow: 0 20px 70px rgba(24, 18, 65, 0.24);
+    animation: puModalEnter 0.2s ease-out;
+}
+
+@keyframes puModalEnter {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+body.pu-modal-open {
+    overflow: hidden;
+}
+
+.pu-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 50%;
+    background: #f2f0ff;
+    color: #5b4ff5;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.pu-modal-title {
+    margin: 0 35px 22px 0;
+    color: #24213a;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.pu-field-label {
+    display: block;
+    margin: 14px 0 7px;
+    color: #45415e;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.pu-input,
+.pu-textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+    padding: 11px 13px;
+    border: 1px solid #e5e2f1;
+    border-radius: 11px;
+    outline: none;
+    background: #ffffff;
+    color: #29263f;
+    font: inherit;
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.pu-input:focus,
+.pu-textarea:focus {
+    border-color: #7569fa;
+    box-shadow: 0 0 0 3px rgba(91, 79, 245, 0.1);
+}
+
+.pu-textarea {
+    min-height: 85px;
+    resize: vertical;
+}
+
+.pu-two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.pu-primary-button,
+.pu-secondary-button {
+    min-height: 42px;
+    padding: 10px 16px;
+    border: 0;
+    border-radius: 11px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+}
+
+.pu-primary-button {
+    width: 100%;
+    margin-top: 17px;
+    background: #5b4ff5;
+    color: #ffffff;
+}
+
+.pu-secondary-button {
+    margin-top: 10px;
+    background: #f0eeff;
+    color: #5b4ff5;
+}
+
+.pu-primary-button:active,
+.pu-secondary-button:active {
+    transform: scale(0.98);
+}
+
+.pu-section-divider {
+    height: 1px;
+    margin: 22px 0;
+    background: #eeecf5;
+}
+
+.pu-section-title {
+    margin: 0 0 12px;
+    color: #302c49;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.pu-muted {
+    margin: 8px 0;
+    color: #9995aa;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Subtasks */
+
+.pu-subtask-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0eef6;
+    color: #45415e;
+    font-size: 13px;
+}
+
+.pu-subtask-row input {
+    accent-color: #5b4ff5;
+}
+
+.pu-subtask-row span {
+    flex: 1;
+    overflow-wrap: anywhere;
+}
+
+.pu-remove-subtask {
+    border: 0;
+    background: transparent;
+    color: #a09bb2;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.pu-inline-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.pu-inline-form .pu-input {
+    flex: 1;
+    min-width: 0;
+}
+
+.pu-inline-form .pu-secondary-button {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+/* Comments */
+
+.pu-comment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-bottom: 12px;
+}
+
+.pu-comment {
+    padding: 12px;
+    border-radius: 12px;
+    background: #f8f7ff;
+}
+
+.pu-comment p {
+    margin: 0 0 7px;
+    color: #45415e;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.pu-comment small {
+    color: #9691a9;
+    font-size: 10px;
+}
+
+/* Attachments */
+
+.pu-attachment-list {
+    margin-top: 10px;
+}
+
+.pu-attachment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid #f0eef6;
+    color: #45415e;
+    font-size: 12px;
+}
+
+.pu-attachment-row span {
+    overflow-wrap: anywhere;
+}
+
+/* Search */
+
+.pu-search-results {
+    max-height: 55vh;
+    overflow-y: auto;
+    margin-top: 16px;
+}
+
+.pu-search-results .pu-section-title {
+    margin-top: 17px;
+}
+
+.pu-search-result {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 7px 0;
+    padding: 12px;
+    border: 1px solid #eeecf5;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #38344f;
+    text-align: left;
+}
+
+.pu-search-result strong {
+    font-size: 13px;
+}
+
+.pu-search-result small {
+    color: #9691a9;
+    font-size: 11px;
+}
+
+.pu-search-task {
+    cursor: pointer;
+}
+
+.pu-search-task:hover {
+    border-color: #c9c3ff;
+    background: #faf9ff;
+}
+
+/* Notifications */
+
+.pu-notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 55vh;
+    overflow-y: auto;
+}
+
+.pu-notification {
+    padding: 13px;
+    border: 1px solid #ece9fa;
+    border-left: 3px solid #5b4ff5;
+    border-radius: 12px;
+    background: #faf9ff;
+}
+
+.pu-notification.pu-read {
+    border-left-color: #d7d3e6;
+    background: #ffffff;
+}
+
+.pu-notification strong {
+    color: #37334f;
+    font-size: 13px;
+}
+
+.pu-notification p {
+    margin: 6px 0;
+    color: #69647e;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.pu-notification small {
+    color: #a09bb2;
+    font-size: 10px;
+}
+
+/* Dashboard and mobile safety */
+
+.pu-modal *,
+.pu-modal *::before,
+.pu-modal *::after {
+    box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+    .pu-modal-host {
+        padding: 10px;
+        align-items: flex-end;
+    }
+
+    .pu-modal {
+        width: 100%;
+        max-height: 90vh;
+        padding: 23px 17px;
+        border-radius: 22px 22px 15px 15px;
+    }
+
+    .pu-two-columns {
+        gap: 8px;
+    }
+}

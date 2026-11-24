@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Vyuh</string>
+    <string name="title_activity_main">Vyuh</string>
+    <string name="package_name">com.kunalkhare21.vyuh</string>
+    <string name="custom_url_scheme">com.kunalkhare21.vyuh</string>
+</resources>

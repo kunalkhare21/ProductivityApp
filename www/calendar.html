@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="status">
+    <span>9:41</span>
+    <span class="icons">
+      <svg viewBox="0 0 18 12" fill="#0d0d14"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5" width="3" height="7" rx="1"/><rect x="10" y="2.5" width="3" height="9.5" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></svg>
+      <svg viewBox="0 0 16 12" fill="none" stroke="#0d0d14" stroke-width="2" stroke-linecap="round"><path d="M1 4a10 10 0 0114 0M3.5 6.8a6.5 6.5 0 019 0M6 9.4a3 3 0 014 0"/></svg>
+      <svg viewBox="0 0 26 12"><rect x=".5" y=".5" width="22" height="11" rx="3" fill="none" stroke="#0d0d14" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2" fill="#0d0d14"/><rect x="23.5" y="4" width="2" height="4" rx="1" fill="#0d0d14" opacity=".5"/></svg>
+    </span>
+  </div>
+
+  <div class="content">
+    <div class="cal-top">
+      <h2 id="calendarMonth">September 2025 <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></h2>
+      <div class="r">
+        <div class="circle-btn" id="calendarSearchButton"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></div>
+        <div class="circle-btn primary" id="calendarAddEventButton"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+      </div>
+    </div>
+
+    <div class="week" id="calendarWeek">
+      <div class="day"><span>Mon</span><b>15</b></div>
+      <div class="day"><span>Tue</span><b>16</b></div>
+      <div class="day on"><span>Wed</span><b>17</b></div>
+      <div class="day"><span>Thu</span><b>18</b></div>
+      <div class="day"><span>Fri</span><b>19</b></div>
+      <div class="day dim"><span>Sat</span><b>20</b></div>
+    </div>
+
+    <!-- 1 hour = 150px, timeline starts at 09:00 AM -->
+    <div class="timeline" id="calendarTimeline">
+      <!-- Events will be rendered dynamically by calendar.js -->
+    </div>
+    </div>
+
+  <!-- Bottom nav: CALENDAR is active -->
+  <nav class="nav">
+    <a href="home.html"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/></svg></a>
+    <a href="calendar.html" class="active"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></a>
+    <a href="#" class="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
+    <a href="detail.html"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
+    <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
+  </nav>
+  <div class="home-indicator"></div>
+</div>
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/calendar.js"></script>
+<script src="js/integrated-upgrade.js"></script>
+    <script src="js/calendar-events.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
