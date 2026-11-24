@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#5b4ff5">
+<title>Productivity App</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/workspace.css">
+</head>
+<body>
+<div class="phone workspace-phone">
+  <div class="status"><span id="clockLabel">Productivity</span><span class="icons">â— â— â—</span></div>
+  <main class="content workspace-content">
+    <header class="workspace-header">
+      <div><small id="greeting">Welcome back</small><h1 id="pageTitle">Dashboard</h1></div>
+      <button class="profile-avatar" id="profileShortcut" aria-label="Open profile">K</button>
+    </header>
+    <section class="view active" id="dashboardView">
+      <div class="dashboard-hero"><div><span>YOUR WORKSPACE</span><h2>Make progress<br>every day.</h2></div><div class="hero-mark">âœ¦</div></div>
+      <div class="stats-grid" id="dashboardStats"></div>
+      <div class="section-heading"><h3>Project progress</h3><button class="text-button" data-view="projects">See all</button></div>
+      <div id="dashboardProjects" class="stack"></div>
+      <div class="section-heading"><h3>Upcoming deadlines</h3><button class="text-button" data-view="tasks">View tasks</button></div>
+      <div id="upcomingTasks" class="stack"></div>
+    </section>
+    <section class="view" id="projectsView">
+      <div class="toolbar"><input id="projectSearch" type="search" placeholder="Search projects"><button class="primary-button" id="addProjectBtn">+ Project</button></div>
+      <div class="filter-row"><select id="projectStatusFilter"><option value="">All statuses</option><option>Not Started</option><option>In Progress</option><option>On Hold</option><option>Completed</option></select><select id="projectPriorityFilter"><option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option></select></div>
+      <div id="projectsList" class="stack"></div>
+    </section>
+    <section class="view" id="tasksView">
+      <div class="toolbar"><input id="globalSearch" type="search" placeholder="Search tasks and projects"><button class="primary-button" id="addTaskBtn">+ Task</button></div>
+      <div class="filter-row"><select id="taskStatusFilter"><option value="">All statuses</option><option>To Do</option><option>In Progress</option><option>In Review</option><option>Complete</option></select><select id="taskPriorityFilter"><option value="">All priorities</option><option>Low</option><option>Medium</option><option>High</option></select><input id="taskDateFilter" type="date" aria-label="Filter by due date"></div>
+      <div id="tasksList" class="stack"></div>
+    </section>
+    <section class="view" id="calendarView">
+      <div class="toolbar"><input type="date" id="calendarDate"><button class="primary-button" id="addEventBtn">+ Event</button></div>
+      <div class="calendar-summary" id="calendarSummary"></div>
+      <div id="eventsList" class="stack"></div>
+    </section>
+    <section class="view" id="notificationsView">
+      <div class="section-heading"><h3>Notifications & reminders</h3><button class="text-button" id="enableNotifications">Enable browser alerts</button></div>
+      <div id="notificationsList" class="stack"></div>
+    </section>
+    <section class="view" id="profileView">
+      <div class="profile-card"><div class="profile-avatar large" id="profileBigAvatar">K</div><h2 id="profileDisplayName">Kunal Khare</h2><p id="profileDisplayEmail">Local profile</p></div>
+      <form id="profileForm" class="form-card">
+        <label>Full name<input name="name" required maxlength="80"></label>
+        <label>Email<input name="email" type="email" placeholder="name@example.com"></label>
+        <label>Role / designation<input name="role" placeholder="e.g. Project Manager"></label>
+        <label>Default reminder<select name="reminder"><option value="0">No reminder</option><option value="1">1 day before</option><option value="2">2 days before</option><option value="7">1 week before</option></select></label>
+        <label class="inline-check"><input name="dailySummary" type="checkbox"> Show daily summary</label>
+        <button class="primary-button full" type="submit">Save profile & preferences</button>
+      </form>
+      <div class="section-heading"><h3>Data management</h3></div>
+      <div class="button-row"><button class="secondary-button" id="exportDataBtn">Export backup</button><label class="secondary-button file-button">Import backup<input type="file" id="importDataInput" accept="application/json"></label></div>
+    </section>
+  </main>
+  <nav class="workspace-nav" aria-label="Main navigation">
+    <button class="nav-item active" data-view="dashboard"><span>âŒ‚</span>Home</button>
+    <button class="nav-item" data-view="projects"><span>â–¦</span>Projects</button>
+    <button class="nav-item" data-view="tasks"><span>âœ“</span>Tasks</button>
+    <button class="nav-item" data-view="calendar"><span>â–£</span>Calendar</button>
+    <button class="nav-item" data-view="notifications"><span>â™§</span><i id="notificationDot"></i>Alerts</button>
+  </nav>
+</div>
+
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+  <section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-heading"><h2 id="modalTitle">New item</h2><button type="button" class="icon-button" id="closeModal">&#215;</button></div>
+    <div id="modalBody"></div>
+  </section>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script src="js/workspace.js"></script>
+</body>
+</html>
+

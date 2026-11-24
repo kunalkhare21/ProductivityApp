@@ -1,0 +1,31 @@
+﻿# Local backups
+backup/
+
+# Dependencies and build output
+node_modules/
+dist/
+build/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs and temporary files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Unfinished duplicate admin pages
+/admin/
+
+# Unfinished duplicate admin pages
+/admin/
+
+# Incorrectly named HTML file
+/css/admin.css
