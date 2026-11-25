@@ -4,6 +4,8 @@
     const monthHeading = document.getElementById("calendarMonth");
     const weekContainer = document.getElementById("calendarWeek");
     const timeline = document.getElementById("calendarTimeline");
+    const previousWeekButton = document.getElementById("previousCalendarWeek");
+    const nextWeekButton = document.getElementById("nextCalendarWeek");
 
     if (!monthHeading || !weekContainer || !timeline) return;
 
@@ -101,14 +103,14 @@
 
     function renderWeek() {
         const monday = getMonday(selectedDate);
-        const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayNames = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
         weekContainer.innerHTML = dayNames.map(function (name, index) {
             const date = new Date(monday);
             date.setDate(monday.getDate() + index);
 
             const isSelected = dateKey(date) === dateKey(selectedDate);
-            const isWeekend = index === 5;
+            const isWeekend = index >= 5;
 
             return `
                 <div class="day ${isSelected ? "on" : ""} ${isWeekend ? "dim" : ""}"
@@ -247,15 +249,22 @@
         renderCalendar();
     });
 
-    monthHeading.addEventListener("click", function () {
-        selectedDate = new Date(
-            selectedDate.getFullYear(),
-            selectedDate.getMonth(),
-            1
-        );
-
+    function moveSelectedWeek(offset) {
+        selectedDate.setDate(selectedDate.getDate() + offset * 7);
         renderCalendar();
-    });
+    }
+
+    if (previousWeekButton) {
+        previousWeekButton.addEventListener("click", function () {
+            moveSelectedWeek(-1);
+        });
+    }
+
+    if (nextWeekButton) {
+        nextWeekButton.addEventListener("click", function () {
+            moveSelectedWeek(1);
+        });
+    }
 
     renderCalendar();
 
@@ -265,6 +274,5 @@
         }
     });
 });
-
 
 

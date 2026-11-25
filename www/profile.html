@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <main class="content profile-content">
+    <div class="topbar"><a href="home.html" class="circle-btn" aria-label="Back to home"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a><h2>Profile settings</h2><span class="profile-top-spacer"></span></div>
+    <section class="profile-summary">
+      <div class="profile-photo" id="profilePhoto" aria-label="Profile picture"></div>
+      <h1 id="profileName">Your profile</h1>
+      <p id="profileEmail"></p>
+    </section>
+    <form id="profileForm" class="profile-form">
+      <label>Profile picture<input type="file" id="profileImage" accept="image/*"><small>Choose a photo stored on this device (up to 700 KB).</small></label>
+      <label>Full name<input name="name" required maxlength="80" autocomplete="name"></label>
+      <label>Email<input name="email" type="email" required autocomplete="email"></label>
+      <label>Role / designation<input name="role" maxlength="80" placeholder="e.g. Project Manager"></label>
+      <label>About<textarea name="about" rows="3" maxlength="300" placeholder="A short introduction"></textarea></label>
+      <label>Default reminder<select name="reminder"><option value="0">No reminder</option><option value="1">1 day before</option><option value="2">2 days before</option><option value="7">1 week before</option></select></label>
+      <label class="profile-check"><input name="dailySummary" type="checkbox"> Show daily summary</label>
+      <button class="profile-save" type="submit">Save profile</button>
+      <button class="profile-logout" type="button" id="logoutButton">Log out</button>
+      <p class="profile-message" id="profileMessage" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="home.html"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/></svg></a>
+    <a href="calendar.html"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></a>
+    <a href="home.html#new-project" class="add" aria-label="Create project"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
+    <a href="all-items.html?view=projects" aria-label="Projects"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
+    <a href="profile.html" class="active" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
+  </nav>
+  <div class="home-indicator"></div>
+</div>
+<script src="js/session.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/profile.js"></script>
+</body>
+</html>

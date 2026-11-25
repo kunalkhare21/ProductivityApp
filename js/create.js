@@ -10,6 +10,8 @@
 
     function openModal() {
         modal.style.display = "flex";
+        const projectName = form.elements.name;
+        if (projectName) projectName.focus();
     }
 
     function closeModal() {
@@ -21,6 +23,11 @@
         event.preventDefault();
         openModal();
     });
+
+    if (window.location.hash === "#new-project") {
+        openModal();
+        history.replaceState(null, "", window.location.pathname);
+    }
 
     cancelButton.addEventListener("click", closeModal);
 
@@ -41,6 +48,9 @@
         const startDate = String(formData.get("startDate") || "");
         const dueDate = String(formData.get("dueDate") || "");
         const membersInput = String(formData.get("members") || "");
+        const members = membersInput.split(/[,\n;]/)
+            .map(function (member) { return member.trim().toLowerCase(); })
+            .filter(Boolean);
 
         if (!name) {
             alert("Please enter a project name.");
@@ -62,6 +72,19 @@
             return;
         }
 
+        if (members.some(function (email) {
+            return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        })) {
+            alert("Enter valid team member email addresses, separated by commas.");
+            form.elements.members.focus();
+            return;
+        }
+        if (new Set(members).size !== members.length) {
+            alert("Remove duplicate team member email addresses.");
+            form.elements.members.focus();
+            return;
+        }
+
         const projects = Storage.getProjects();
 
         const project = {
@@ -75,12 +98,7 @@
             progress: 0,
             totalTasks: 0,
             completedTasks: 0,
-            members: membersInput
-                .split(",")
-                .map(function (member) {
-                    return member.trim();
-                })
-                .filter(Boolean),
+            members: members,
             comments: 0,
             attachments: [],
             subtasks: []

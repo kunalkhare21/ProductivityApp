@@ -1,8 +1,9 @@
 ﻿document.addEventListener("DOMContentLoaded", function () {
     const content = document.querySelector(".content");
     const chips = document.querySelector(".chips");
+    const taskHeading = chips && chips.previousElementSibling;
 
-    if (!content || !chips || !window.Storage) return;
+    if (!content || !chips || !taskHeading || !window.Storage) return;
 
     let activeFilter = "To Do";
 
@@ -27,6 +28,7 @@
 
     function renderTasks() {
         const tasks = Storage.getTasks();
+        const allTasks = Array.isArray(tasks) ? tasks : [];
 
         let oldTask = chips.nextElementSibling;
 
@@ -36,7 +38,7 @@
             oldTask = next;
         }
 
-        const filteredTasks = tasks.filter(function (task) {
+        const filteredTasks = allTasks.filter(function (task) {
             if (activeFilter === "Complete") {
                 return isCompleted(task);
             }
@@ -44,11 +46,10 @@
             return String(task.status || "") === activeFilter;
         });
 
-        if (filteredTasks.length === 0) {
-            const empty = document.createElement("div");
-            empty.className = "task";
-            empty.textContent = "No " + activeFilter.toLowerCase() + " tasks";
-            chips.insertAdjacentElement("afterend", empty);
+        const hasTasks = allTasks.length > 0;
+        taskHeading.hidden = !hasTasks;
+        chips.hidden = !hasTasks;
+        if (!hasTasks || filteredTasks.length === 0) {
             return;
         }
 

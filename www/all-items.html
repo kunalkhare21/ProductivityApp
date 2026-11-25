@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>All projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <main class="content all-items-content">
+    <div class="topbar">
+      <a href="home.html" class="circle-btn" aria-label="Back to home"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></a>
+      <h2 id="listTitle">All projects</h2>
+      <span class="profile-top-spacer"></span>
+    </div>
+    <div class="all-items-heading">
+      <h1 id="listHeading">Your projects</h1>
+      <p id="listDescription">All your projects in one place.</p>
+    </div>
+    <div class="chips task-list-filters" id="taskListFilters" hidden>
+      <button type="button" class="chip on" data-task-filter="All">All</button>
+      <button type="button" class="chip" data-task-filter="To Do">To Do</button>
+      <button type="button" class="chip" data-task-filter="In Progress">In Progress</button>
+      <button type="button" class="chip" data-task-filter="In Review">In Review</button>
+      <button type="button" class="chip" data-task-filter="Complete">Complete</button>
+    </div>
+    <section class="all-projects-list" id="allProjectsList"></section>
+    <section class="all-tasks-list" id="allTasksList" hidden></section>
+  </main>
+  <nav class="nav" aria-label="Main navigation">
+    <a href="home.html" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/></svg></a>
+    <a href="calendar.html" aria-label="Calendar"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></a>
+    <a href="home.html#new-project" class="add" aria-label="Create project"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
+    <a href="all-items.html?view=projects" class="active" aria-label="Projects"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
+    <a href="profile.html" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
+  </nav>
+  <div class="home-indicator"></div>
+</div>
+<script src="js/session.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/integrated-upgrade.js"></script>
+<script src="js/all-items.js"></script>
+</body>
+</html>

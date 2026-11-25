@@ -33,28 +33,44 @@
 
     function renderProjects() {
         const projects = Storage.getProjects();
+        const heading = projectContainer.previousElementSibling;
 
         if (!projects.length) {
-            projectContainer.innerHTML =
-                '<div class="proj">No projects available</div>';
+            projectContainer.innerHTML = "";
+            projectContainer.hidden = true;
+            if (heading) heading.hidden = true;
             return;
         }
+        projectContainer.hidden = false;
+        if (heading) heading.hidden = false;
 
         projectContainer.innerHTML = projects.map(function (project) {
-            const progress = Math.min(
-                100,
-                Math.max(0, Number(project.progress) || 0)
-            );
-
-            const completed = Number(project.completedTasks) || 0;
-            const total = Number(project.totalTasks) || 0;
+            const linkedTasks = Storage.getTasks().filter(function (task) {
+                return String(task.projectId) === String(project.id);
+            });
+            const completed = linkedTasks.filter(function (task) {
+                const status = String(task.status || "").toLowerCase();
+                return status === "complete" || status === "completed" || status === "done";
+            }).length;
+            const total = linkedTasks.length;
+            const progress = total ? Math.round(completed / total * 100) : 0;
 
             const members = Array.isArray(project.members)
                 ? project.members
                 : [];
 
             const priority = escapeHTML(project.priority || "Medium");
-            const status = escapeHTML(project.status || "Not Started");
+            const taskStatuses = linkedTasks.map(function (task) {
+                return String(task.status || "").trim().toLowerCase();
+            });
+            const allCompleted = linkedTasks.length > 0 && taskStatuses.every(function (status) {
+                return status === "complete" || status === "completed" || status === "done";
+            });
+            const status = escapeHTML(allCompleted
+                ? "Completed"
+                : taskStatuses.some(function (value) { return value === "in progress"; })
+                    ? "In Progress"
+                    : linkedTasks.length ? "Not Started" : (project.status || "Not Started"));
 
             const dateHTML = project.dueDate
                 ? `<span class="tag date">
@@ -70,25 +86,10 @@
                 const avatarClass =
                     avatarClasses[index % avatarClasses.length];
 
-                return `<span class="${avatarClass}">${escapeHTML(member)}</span>`;
+                const label = String(member);
+                const initial = label.includes("@") ? label.trim().charAt(0).toUpperCase() : label;
+                return `<span class="${avatarClass}" title="${escapeHTML(label)}">${escapeHTML(initial)}</span>`;
             }).join("");
-
-            const commentsHTML = Number(project.comments) > 0
-                ? `<div class="r">
-                    <span style="display:flex;align-items:center;gap:4px">
-                        <svg viewBox="0 0 24 24">
-                            <path d="M4 5h16v11H9l-5 4z"/>
-                        </svg>
-                        ${Number(project.comments)}
-                    </span>
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="6" cy="12" r="2.5"/>
-                        <circle cx="18" cy="6" r="2.5"/>
-                        <circle cx="18" cy="18" r="2.5"/>
-                        <path d="M8.2 11l7.6-4M8.2 13l7.6 4"/>
-                    </svg>
-                </div>`
-                : "";
 
             return `
                 <div class="proj" data-project-id="${escapeHTML(project.id)}">
@@ -118,7 +119,6 @@
 
                     <div class="foot">
                         <div class="avatars">${avatarsHTML}</div>
-                        ${commentsHTML}
                     </div>
                 </div>
             `;
@@ -134,6 +134,7 @@
     });
 
     window.addEventListener("projectsUpdated", renderProjects);
+    window.addEventListener("tasksUpdated", renderProjects);
 });
 
 // Open the selected project details.

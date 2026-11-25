@@ -18,6 +18,13 @@
         addButton.addEventListener("click", function () {
             openEventForm(null);
         });
+        const navAddButton = document.getElementById("navAddAction");
+        if (navAddButton) {
+            navAddButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                addButton.click();
+            });
+        }
 
         if (searchButton) {
             searchButton.addEventListener("click", openEventSearch);
@@ -342,5 +349,4 @@
         input.focus();
     }
 })();
-
 

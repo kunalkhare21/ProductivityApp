@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in - Productivity App</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="phone auth-phone">
+  <section class="auth-content">
+    <div class="auth-brand"><span class="auth-mark">✓</span><h1>Productivity App</h1></div>
+    <p class="auth-intro">Sign in or create an account to continue.</p>
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab active" id="loginTab">Login</button>
+      <button type="button" class="auth-tab" id="signupTab">Sign up</button>
+    </div>
+    <form id="authForm" class="auth-form">
+      <label id="nameField" hidden>Full name<input name="name" autocomplete="name" maxlength="80"></label>
+      <label>Email<input name="email" type="email" required autocomplete="email" placeholder="name@example.com"></label>
+      <label>Password<input name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="At least 8 characters"></label>
+      <p class="auth-error" id="authError" role="alert" hidden></p>
+      <button class="auth-submit" type="submit" id="authSubmit">Login</button>
+    </form>
+    <p class="auth-note">Prototype only: accounts and app data stay on this device and are not private from other device users. Connect a backend before using real credentials.</p>
+  </section>
+</main>
+<script src="js/auth.js"></script>
+</body>
+</html>

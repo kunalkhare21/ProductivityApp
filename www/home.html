@@ -22,7 +22,7 @@
     <div class="greet">
       <div class="who">
         <div class="pic"></div>
-        <div><small>Good Morning ðŸ‘‹</small><strong>Kanaya Michael</strong></div>
+        <div><small id="homeGreeting">Good morning</small><strong id="homeName">Your name</strong></div>
       </div>
       <div class="circle-btn">
         <svg viewBox="0 0 24 24"><path d="M6 9a6 6 0 0112 0c0 6 2 7 2 7H4s2-1 2-7M10 20a2 2 0 004 0"/></svg>
@@ -55,7 +55,7 @@
       </div>
     </div>
 
-    <div class="sec-head"><h3>Currently Project</h3><a href="#">See all</a></div>
+    <div class="sec-head"><h3>Currently Project</h3><a href="all-items.html?view=projects">See all</a></div>
     <div class="proj-row">
       <div class="proj">
         <div class="tags">
@@ -67,10 +67,6 @@
         <div class="bar"><i style="width:75%"></i></div>
         <div class="foot">
           <div class="avatars"><span class="a1">K</span><span class="a2">M</span><span class="a3">S</span><span class="a4">R</span></div>
-          <div class="r">
-            <span style="display:flex;align-items:center;gap:4px"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>8</span>
-            <svg viewBox="0 0 24 24"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.2 11l7.6-4M8.2 13l7.6 4"/></svg>
-          </div>
         </div>
       </div>
       <div class="proj">
@@ -84,7 +80,7 @@
       </div>
     </div>
 
-    <div class="sec-head"><h3>All Tasks</h3><a href="#">See all</a></div>
+    <div class="sec-head"><h3>All Tasks</h3><a href="all-items.html?view=tasks">See all</a></div>
     <div class="chips">
       <span class="chip on">To Do</span><span class="chip">In Progress</span><span class="chip">In Review</span><span class="chip">Complete</span>
     </div>
@@ -116,8 +112,8 @@
         <label>Due Date</label>
         <input type="date" name="dueDate" required>
 
-        <label>Team Members</label>
-        <input type="text" name="members" placeholder="Example: K, S, R">
+        <label>Team member emails</label>
+        <input type="text" name="members" placeholder="name@example.com, teammate@example.com">
 
         <div class="project-modal-actions">
           <button type="button" id="cancelProjectButton">Cancel</button>
@@ -131,24 +127,21 @@
     <a href="home.html" class="active"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/></svg></a>
     <a href="calendar.html"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></a>
     <a href="#" class="add" id="createProjectButton"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
-    <a href="detail.html"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
-    <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
+    <a href="all-items.html?view=projects" aria-label="Projects"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
+    <a href="profile.html" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
   </nav>
   <div class="home-indicator"></div>
 </div>
+    <script src="js/session.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/app.js"></script>
     <script src="js/projects.js"></script>
     <script src="js/tasks.js"></script>
   <script src="js/create.js"></script>
 <script src="js/integrated-upgrade.js"></script>
+<script src="js/home-ui.js"></script>
 </body>
 </html>
-
-
-
-
-
 
 
 

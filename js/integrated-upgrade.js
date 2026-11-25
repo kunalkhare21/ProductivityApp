@@ -112,7 +112,7 @@
     }
 
     function saveTaskComments(comments) {
-        Storage.saveTaskComments(comments);
+        return Storage.saveTaskComments(comments);
     }
 
     function getProfile() {
@@ -170,14 +170,14 @@
         const dueToday = tasks.filter(function (task) {
             if (!task.dueDate || isCompleted(task)) return false;
 
-            const dueDate = new Date(task.dueDate);
+            const dueDate = parseTaskDate(task.dueDate);
             return !Number.isNaN(dueDate.getTime()) && sameDay(dueDate, today);
         }).length;
 
         const upcoming = tasks.filter(function (task) {
             if (!task.dueDate || isCompleted(task)) return false;
 
-            const dueDate = new Date(task.dueDate);
+            const dueDate = parseTaskDate(task.dueDate);
             return !Number.isNaN(dueDate.getTime()) &&
                 startOfDay(dueDate) > today;
         }).length;
@@ -216,6 +216,12 @@
         return result;
     }
 
+    function parseTaskDate(value) {
+        const parts = String(value).split("-").map(Number);
+        if (parts.length !== 3 || parts.some(Number.isNaN)) return new Date(value);
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+    }
+
     function sameDay(first, second) {
         return first.getFullYear() === second.getFullYear() &&
             first.getMonth() === second.getMonth() &&
@@ -251,6 +257,27 @@
         const taskComments = Array.isArray(comments[taskId]) ? comments[taskId] : [];
         const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
         const attachments = Array.isArray(task.attachments) ? task.attachments : [];
+        function normalizeSubtask(item) {
+            if (typeof item === "string") {
+                return { title: item, completed: false };
+            }
+            if (!item || typeof item !== "object") {
+                return { title: "", completed: false };
+            }
+            const completed = typeof item.completed === "boolean"
+                ? item.completed
+                : typeof item.done === "boolean"
+                    ? item.done
+                    : typeof item.isCompleted === "boolean"
+                        ? item.isCompleted
+                        : ["complete", "completed", "done"].includes(
+                            String(item.status || "").trim().toLowerCase()
+                        );
+            return {
+                title: String(item.title || item.name || ""),
+                completed: completed
+            };
+        }
 
         const content = `
             <div class="pu-task-detail">
@@ -293,10 +320,11 @@
                 <h3 class="pu-section-title">Subtasks</h3>
                 <div id="puSubtaskList">
                     ${subtasks.map(function (item, index) {
+                        const subtask = normalizeSubtask(item);
                         return `
                             <label class="pu-subtask-row">
-                                <input type="checkbox" data-subtask-index="${index}" ${item.completed ? "checked" : ""}>
-                                <span>${escapeHTML(item.title || "")}</span>
+                                <input type="checkbox" data-subtask-index="${index}" ${subtask.completed ? "checked" : ""}>
+                                <span>${escapeHTML(subtask.title)}</span>
                                 <button type="button" class="pu-remove-subtask" data-remove-subtask="${index}" aria-label="Remove subtask">&#215;</button>
                             </label>
                         `;
@@ -380,7 +408,16 @@
                 const index = Number(checkbox.dataset.subtaskIndex);
                 updateTask(taskId, function (task) {
                     const subtasks = Array.isArray(task.subtasks) ? task.subtasks.slice() : [];
-                    if (subtasks[index]) subtasks[index].completed = checkbox.checked;
+                    if (subtasks[index]) {
+                        const item = subtasks[index];
+                        const normalized = normalizeSubtask(item);
+                        subtasks[index] = typeof item === "string"
+                            ? { title: normalized.title, completed: checkbox.checked }
+                            : Object.assign({}, item, {
+                                completed: checkbox.checked,
+                                done: checkbox.checked
+                            });
+                    }
                     task.subtasks = subtasks;
                     return task;
                 });
@@ -413,7 +450,11 @@
                 text: text,
                 createdAt: new Date().toLocaleString()
             });
-            saveTaskComments(comments);
+            if (!saveTaskComments(comments)) {
+                alert("Could not save this comment. Please try again.");
+                return;
+            }
+            window.dispatchEvent(new Event("tasksUpdated"));
             openTaskDetails(taskId);
         });
 
@@ -620,42 +661,12 @@
 
         profileLink.addEventListener("click", function (event) {
             event.preventDefault();
-            openProfile();
+            window.location.href = "profile.html";
         });
     }
 
     function openProfile() {
-        const profile = getProfile();
-        const nameElement = document.querySelector(".greet strong");
-        const defaultName = nameElement ? nameElement.textContent.trim() : "";
-
-        openModal("Your profile", `
-            <label class="pu-field-label">Name</label>
-            <input class="pu-input" id="puProfileName" value="${escapeHTML(profile.name || defaultName)}">
-            <label class="pu-field-label">Email</label>
-            <input class="pu-input" type="email" id="puProfileEmail" value="${escapeHTML(profile.email || "")}" placeholder="Enter your email">
-            <label class="pu-field-label">About</label>
-            <textarea class="pu-textarea" id="puProfileAbout" placeholder="A short introduction">${escapeHTML(profile.about || "")}</textarea>
-            <label class="pu-field-label">Theme</label>
-            <select class="pu-input" id="puProfileTheme">
-                <option value="purple">Original purple</option>
-            </select>
-            <button type="button" class="pu-primary-button" id="puSaveProfile">Save profile</button>
-        `);
-
-        document.getElementById("puSaveProfile").addEventListener("click", function () {
-            const updated = {
-                name: document.getElementById("puProfileName").value.trim(),
-                email: document.getElementById("puProfileEmail").value.trim(),
-                about: document.getElementById("puProfileAbout").value.trim(),
-                theme: "purple"
-            };
-            saveProfile(updated);
-
-            const name = document.querySelector(".greet strong");
-            if (name && updated.name) name.textContent = updated.name;
-            closeModal();
-        });
+        window.location.href = "profile.html";
     }
 
     /* ---------------- GLOBAL HELPERS ---------------- */
@@ -696,6 +707,3 @@
         }
     };
 })();
-
-
-

@@ -1,10 +1,11 @@
 /* Integrated workspace styles - preserves the existing purple visual language */
 .workspace-phone{width:min(100%,520px);height:100dvh;min-height:680px;border-radius:28px;background:#f8f7ff}
-.workspace-content{padding:66px 18px 112px}
+.workspace-content{padding:20px 18px 112px}
 .workspace-header{display:flex;align-items:center;justify-content:space-between;margin:4px 0 20px}
 .workspace-header small{color:var(--muted);font-size:12px}
 .workspace-header h1{font-size:26px;margin-top:3px}
 .profile-avatar{border:0;border-radius:50%;width:44px;height:44px;background:linear-gradient(135deg,#c9a0dc,#5b4ff5);color:white;font-weight:700;font-size:17px;display:grid;place-items:center}
+.profile-avatar img,.profile-avatar.large img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .profile-avatar.large{width:72px;height:72px;font-size:26px;margin:0 auto 10px}
 .view{display:none}.view.active{display:block}
 .dashboard-hero{background:linear-gradient(125deg,#5b4ff5,#897ff9);color:white;border-radius:22px;padding:22px;display:flex;justify-content:space-between;align-items:center;min-height:150px}

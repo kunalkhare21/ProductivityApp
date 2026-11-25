@@ -12,12 +12,125 @@
     const editModal = document.getElementById("editProjectModal");
     const editForm = document.getElementById("editProjectForm");
     const cancelEditButton = document.getElementById("cancelEditProjectButton");
+    const addMemberButton = document.getElementById("addProjectMemberButton");
+    const addMemberModal = document.getElementById("addMemberModal");
+    const addMemberForm = document.getElementById("addMemberForm");
+    const cancelAddMemberButton = document.getElementById("cancelAddMemberButton");
+    const attachmentInput = document.getElementById("projectAttachmentInput");
 
     if (!optionsButton || !optionsMenu) return;
 
     function getProject() {
         return Storage.getProjects().find(function (item) {
             return String(item.id) === projectId;
+        });
+    }
+
+    function closeMemberModal() {
+        if (addMemberModal) addMemberModal.style.display = "none";
+        if (addMemberForm) addMemberForm.reset();
+        const message = document.getElementById("memberFormMessage");
+        if (message) message.textContent = "";
+    }
+
+    if (addMemberButton && addMemberModal && addMemberForm) {
+        addMemberButton.addEventListener("click", function () {
+            addMemberModal.style.display = "flex";
+            addMemberForm.elements.email.focus();
+        });
+        if (cancelAddMemberButton) cancelAddMemberButton.addEventListener("click", closeMemberModal);
+        addMemberModal.addEventListener("click", function (event) {
+            if (event.target === addMemberModal) closeMemberModal();
+        });
+        addMemberForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const message = document.getElementById("memberFormMessage");
+            const email = addMemberForm.elements.email.value.trim().toLowerCase();
+            if (!addMemberForm.elements.email.checkValidity() ||
+                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                message.textContent = "Enter a valid email address.";
+                return;
+            }
+
+            const project = getProject();
+            if (!project) {
+                message.textContent = "This project could not be found.";
+                return;
+            }
+            const members = Array.isArray(project.members) ? project.members.slice() : [];
+            if (members.some(function (member) {
+                return String(member).trim().toLowerCase() === email;
+            })) {
+                message.textContent = "This email is already a team member.";
+                return;
+            }
+            members.push(email);
+            const updatedProjects = Storage.getProjects().map(function (item) {
+                return String(item.id) === projectId ? Object.assign({}, item, { members: members }) : item;
+            });
+            if (!Storage.saveProjects(updatedProjects)) {
+                message.textContent = "Could not save this team member. Please try again.";
+                return;
+            }
+
+            if (typeof window.renderProjectMembers === "function") {
+                window.renderProjectMembers(members);
+            }
+            window.dispatchEvent(new Event("projectsUpdated"));
+            closeMemberModal();
+        });
+    }
+
+    if (attachmentInput) {
+        attachmentInput.addEventListener("change", async function () {
+            const files = Array.from(attachmentInput.files || []);
+            if (!files.length) return;
+            const project = getProject();
+            if (!project) {
+                alert("This project could not be found.");
+                attachmentInput.value = "";
+                return;
+            }
+
+            const attachments = Array.isArray(project.attachments) ? project.attachments.slice() : [];
+            const maximumFileSize = 700 * 1024;
+            try {
+                for (const file of files) {
+                    if (file.size > maximumFileSize) {
+                        throw new Error(file.name + " is larger than 700 KB. Choose a smaller file.");
+                    }
+                    const data = await new Promise(function (resolve, reject) {
+                        const reader = new FileReader();
+                        reader.onload = function () { resolve(String(reader.result || "")); };
+                        reader.onerror = function () { reject(reader.error || new Error("Could not read " + file.name)); };
+                        reader.readAsDataURL(file);
+                    });
+                    attachments.push({
+                        name: file.name,
+                        size: Math.max(1, Math.ceil(file.size / 1024)) + " KB",
+                        type: file.type.startsWith("image/") ? "image" : file.type === "application/pdf" ? "pdf" : "file",
+                        mimeType: file.type || "application/octet-stream",
+                        data: data
+                    });
+                }
+
+                const updatedProjects = Storage.getProjects().map(function (item) {
+                    return String(item.id) === projectId ? Object.assign({}, item, { attachments: attachments }) : item;
+                });
+                if (!Storage.saveProjects(updatedProjects)) {
+                    alert("Could not save the attachment. Device storage may be full; try a smaller file.");
+                    return;
+                }
+                if (typeof window.renderProjectAttachments === "function") {
+                    window.renderProjectAttachments(attachments);
+                }
+                window.dispatchEvent(new Event("projectsUpdated"));
+            } catch (error) {
+                console.error("Could not add project attachment:", error);
+                alert(error.message || "Could not add the attachment.");
+            } finally {
+                attachmentInput.value = "";
+            }
         });
     }
 
@@ -53,6 +166,7 @@
         if (event.key === "Escape") {
             closeMenu();
             closeEditModal();
+            closeMemberModal();
         }
     });
 
@@ -74,7 +188,9 @@
             editForm.elements.startDate.value = project.startDate || "";
             editForm.elements.dueDate.value = project.dueDate || "";
             editForm.elements.members.value = Array.isArray(project.members)
-                ? project.members.join(", ")
+                ? project.members.filter(function (member) {
+                    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(member).trim());
+                }).join(", ")
                 : "";
 
             editModal.style.display = "flex";
@@ -105,6 +221,9 @@
             const startDate = editForm.elements.startDate.value;
             const dueDate = editForm.elements.dueDate.value;
             const membersInput = editForm.elements.members.value;
+            const memberEmails = membersInput.split(/[,\n;]/)
+                .map(function (member) { return member.trim().toLowerCase(); })
+                .filter(Boolean);
 
             if (!name) {
                 alert("Please enter a project name.");
@@ -126,6 +245,23 @@
                 return;
             }
 
+            const memberEmailInput = editForm.elements.members;
+            const invalidEmail = memberEmails.find(function (email) {
+                return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            });
+            const memberMessage = document.getElementById("editMemberFormMessage");
+            if (invalidEmail) {
+                if (memberMessage) memberMessage.textContent = "Enter valid email addresses, separated by commas.";
+                memberEmailInput.focus();
+                return;
+            }
+            if (new Set(memberEmails).size !== memberEmails.length) {
+                if (memberMessage) memberMessage.textContent = "Remove duplicate email addresses.";
+                memberEmailInput.focus();
+                return;
+            }
+            if (memberMessage) memberMessage.textContent = "";
+
             const updatedProjects = Storage.getProjects().map(function (item) {
                 if (String(item.id) !== projectId) return item;
 
@@ -136,12 +272,7 @@
                     priority: priority,
                     startDate: startDate,
                     dueDate: dueDate,
-                    members: membersInput
-                        .split(",")
-                        .map(function (member) {
-                            return member.trim();
-                        })
-                        .filter(Boolean)
+                    members: memberEmails
                 };
             });
 
@@ -151,8 +282,10 @@
             }
 
             closeEditModal();
-            alert("Project updated successfully.");
-            window.location.reload();
+            if (typeof window.renderProjectMembers === "function") {
+                window.renderProjectMembers(memberEmails);
+            }
+            window.dispatchEvent(new Event("projectsUpdated"));
         });
     }
 

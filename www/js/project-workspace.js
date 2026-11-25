@@ -8,6 +8,13 @@
         const emptyMessage = document.getElementById("projectTaskEmpty");
 
         if (!addButton || !taskList || !window.Storage) return;
+        const navAddButton = document.getElementById("navAddAction");
+        if (navAddButton) {
+            navAddButton.addEventListener("click", function (event) {
+                event.preventDefault();
+                addButton.click();
+            });
+        }
 
         const params = new URLSearchParams(window.location.search);
         const projects = Storage.getProjects();
@@ -40,26 +47,31 @@
         }
 
         function getStatusClass(status) {
-            if (status === "Completed" || status === "Complete") return "completed";
-            if (status === "In Progress") return "in-progress";
+            const normalized = String(status || "").trim().toLowerCase();
+            if (normalized === "completed" || normalized === "complete" || normalized === "done") return "completed";
+            if (normalized === "in progress") return "in-progress";
             return "";
+        }
+
+        function isCompleted(task) {
+            const status = String(task.status || "").trim().toLowerCase();
+            return status === "completed" || status === "complete" || status === "done";
         }
 
         function renderTasks() {
             const allTasks = getProjectTasks();
+            const taskComments = Storage.getTaskComments();
 
             const filteredTasks = activeFilter === "All"
                 ? allTasks
                 : allTasks.filter(function (task) {
                     if (activeFilter === "Completed") {
-                        return task.status === "Completed" || task.status === "Complete";
+                        return isCompleted(task);
                     }
-                    return task.status === activeFilter;
+                    return String(task.status || "").toLowerCase() === activeFilter.toLowerCase();
                 });
 
-            const completed = allTasks.filter(function (task) {
-                return task.status === "Completed" || task.status === "Complete";
-            }).length;
+            const completed = allTasks.filter(isCompleted).length;
 
             summary.textContent =
                 allTasks.length + " tasks Â· " + completed + " completed";
@@ -69,7 +81,17 @@
                 const assignee = task.assignee || task.assignedTo || "Unassigned";
                 const status = task.status || "To Do";
                 const priority = task.priority || "Medium";
-                const dueDate = task.dueDate || "Not set";
+                const subtasks = Array.isArray(task.subtasks) ? task.subtasks : [];
+                const commentCount = Array.isArray(taskComments[task.id])
+                    ? taskComments[task.id].length
+                    : 0;
+                const dueDate = task.dueDate
+                    ? new Date(task.dueDate + "T00:00:00").toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric"
+                    })
+                    : "Not set";
 
                 return `
                     <article class="project-task-card" data-task-id="${escapeHTML(task.id)}">
@@ -98,7 +120,13 @@
                             </span>
                         </div>
 
+                        <div class="project-task-card-meta">
+                            <span class="project-task-badge">${subtasks.length} subtasks</span>
+                            <span class="project-task-badge">${commentCount} comments</span>
+                        </div>
+
                         <div class="project-task-card-actions">
+                            <button type="button" data-pu-task-open="${escapeHTML(task.id)}">Details</button>
                             <button type="button" data-task-action="edit"
                                 data-task-id="${escapeHTML(task.id)}">Edit</button>
                             <button type="button" data-task-action="delete"
@@ -301,8 +329,8 @@
         });
 
         window.addEventListener("storage", renderTasks);
+        window.addEventListener("tasksUpdated", renderTasks);
 
         renderTasks();
     });
 })();
-

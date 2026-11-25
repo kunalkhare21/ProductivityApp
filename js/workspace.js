@@ -101,10 +101,16 @@
   function renderProfile(){
     const p=profile(), form=$("profileForm");
     $("profileDisplayName").textContent=p.name||"Your name"; $("profileDisplayEmail").textContent=p.email||"Local profile";
-    $("profileBigAvatar").textContent=(p.name||"K").trim().charAt(0).toUpperCase();
+    const initial=(p.name||"K").trim().charAt(0).toUpperCase();
+    $("profileBigAvatar").textContent=initial;
+    $("profileShortcut").textContent=initial;
+    if(p.avatar){
+      [$("profileBigAvatar"),$("profileShortcut")].forEach(el=>{
+        const image=document.createElement("img");image.src=p.avatar;image.alt="Profile picture";el.textContent="";el.appendChild(image);
+      });
+    }
     form.elements.name.value=p.name||""; form.elements.email.value=p.email||""; form.elements.role.value=p.role||""; form.elements.reminder=p.reminder||"1"; form.elements.dailySummary.checked=!!p.dailySummary;
     $("greeting").textContent=`Welcome back, ${(p.name||"there").split(" ")[0]}`;
-    $("profileShortcut").textContent=(p.name||"K").trim().charAt(0).toUpperCase();
   }
   function renderAll(){
     syncProjectProgress();
@@ -223,7 +229,7 @@
   $("addEventBtn").addEventListener("click",()=>eventForm());
   $("projectSearch").addEventListener("input",renderProjects);$("projectStatusFilter").addEventListener("change",renderProjects);$("projectPriorityFilter").addEventListener("change",renderProjects);
   $("globalSearch").addEventListener("input",renderTasks);$("taskStatusFilter").addEventListener("change",renderTasks);$("taskPriorityFilter").addEventListener("change",renderTasks);$("taskDateFilter").addEventListener("change",renderTasks);$("calendarDate").addEventListener("change",renderCalendar);
-  $("profileShortcut").addEventListener("click",()=>showView("profile"));
+  $("profileShortcut").addEventListener("click",()=>{window.location.href="profile.html";});
   $("profileForm").addEventListener("submit",e=>{e.preventDefault();const d=new FormData(e.currentTarget);const value={name:d.get("name").trim(),email:d.get("email").trim(),role:d.get("role").trim(),reminder:d.get("reminder"),dailySummary:d.get("dailySummary")==="on"};if(write(KEYS.profile,value)){renderProfile();toast("Profile and preferences saved.");}});
   $("enableNotifications").addEventListener("click",async()=>{if(!("Notification" in window)){toast("Browser notifications are not supported here.");return;}const result=await Notification.requestPermission();toast(result==="granted"?"Browser notifications enabled.":"Notification permission not granted.");});
   $("exportDataBtn").addEventListener("click",()=>{const data={projects:projects(),tasks:tasks(),events:events(),comments:comments(),profile:profile(),settings:read(KEYS.settings,{})};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="productivity-backup-"+today()+".json";a.click();URL.revokeObjectURL(url);});
@@ -241,6 +247,9 @@
   if(!localStorage.getItem(KEYS.projects))write(KEYS.projects,[]);
   if(!localStorage.getItem(KEYS.events))write(KEYS.events,[]);
   $("calendarDate").value=today();
-  renderProfile();showView("dashboard");runBrowserReminders();
+  renderProfile();
+  const requestedView=window.location.hash.slice(1);
+  showView(["projects","tasks","calendar","notifications","profile"].includes(requestedView)?requestedView:"dashboard");
+  runBrowserReminders();
   window.addEventListener("storage",renderAll);
 })();

@@ -44,32 +44,34 @@
     <div class="team">
       <div style="display:flex;align-items:center">
         <div class="avatars lg"><span class="a1">K</span><span class="a3">S</span><span class="a4">R</span></div>
-        <div class="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></div>
+        <button type="button" class="add" id="addProjectMemberButton" aria-label="Add team member by email"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
       </div>
-      <div class="ring"><span>75%</span></div>
+      <div class="ring"><span>0%</span></div>
     </div>
 
     <h3 class="d-h" style="margin-top:20px">Attachments</h3>
+    <label class="project-attachment-add">
+      <span>+ Add attachment</span>
+      <input type="file" id="projectAttachmentInput" multiple>
+    </label>
+    <small class="attachment-size-note">Images, PDFs, and files up to 700 KB each.</small>
     <div class="attach">
-      <div class="att"><div class="th img"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.5"/><path d="M4 17l5-5 4 4 3-3 4 4"/></svg></div><div><b>UX-userflow-finance.png</b><small>2.5 MB ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ <em>Preview</em></small></div></div>
-      <div class="att"><div class="th"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h4"/></svg></div><div><b>Brief-finance.pdf</b><small>12.0 MB ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¢ <em>Preview</em></small></div></div>
+      <p class="desc">No attachments available.</p>
     </div>
-
-    <h3 class="d-h" style="margin-top:20px">Detail</h3>
+    <h3 class="d-h" style="margin-top:20px">Project subtasks</h3>
     <div class="acc">
-      <div class="h"><span>Task 1 - Research &amp; Planning</span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div>
-      <ul>
+      <div class="h" role="button" tabindex="0" aria-expanded="true" aria-controls="projectSubtaskList"><span>Subtasks</span><svg viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></div>
+      <ul id="projectSubtaskList">
         <li><i></i>Conduct user interviews to understand financial habits</li>
         <li><i></i>Define key user personas and journey maps</li>
         <li><i></i>Analyze competitor finance apps for feature gaps</li>
       </ul>
-      <div class="cm"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/></svg>8</div>
     </div>
     <!-- Project Task Management -->
     <section class="project-task-workspace" id="projectTaskWorkspace">
       <div class="project-task-heading">
         <div>
-          <h3 class="d-h">Project Tasks</h3>
+          <h3 class="d-h">Project tasks</h3>
           <p class="project-task-subtitle">Manage all tasks in this project</p>
         </div>
         <button type="button" class="project-task-add" id="addProjectTaskButton">
@@ -97,6 +99,30 @@
     </section>
   </div>
 
+  <div class="project-modal" id="addMemberModal" style="display:none;">
+    <div class="project-modal-content">
+      <h2>Add team member</h2>
+      <form id="addMemberForm">
+        <label for="memberEmail">Member email</label>
+        <input id="memberEmail" name="email" type="email" required maxlength="254" placeholder="name@example.com">
+        <p class="member-form-message" id="memberFormMessage" role="alert"></p>
+        <div class="project-modal-actions">
+          <button type="button" id="cancelAddMemberButton">Cancel</button>
+          <button type="submit">Add member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="project-modal attachment-preview-modal" id="attachmentPreviewModal" style="display:none;">
+    <div class="project-modal-content">
+      <div class="attachment-preview-heading">
+        <h2 id="attachmentPreviewTitle">Attachment preview</h2>
+        <button type="button" id="closeAttachmentPreview" aria-label="Close preview">Close</button>
+      </div>
+      <div id="attachmentPreviewContent"></div>
+    </div>
+  </div>
+
   <!-- Edit Project Modal -->
   <div class="project-modal" id="editProjectModal" style="display:none;">
     <div class="project-modal-content">
@@ -122,8 +148,10 @@
         <label>Due Date</label>
         <input type="date" name="dueDate" required>
 
-        <label>Team Members</label>
-        <input type="text" name="members" placeholder="Example: K, S, R">
+        <label>Team member emails</label>
+        <textarea name="members" rows="3" placeholder="Enter one or more email addresses, separated by commas"></textarea>
+        <small class="member-edit-hint">Only valid email addresses are saved as project members.</small>
+        <p class="member-form-message" id="editMemberFormMessage" role="alert"></p>
 
         <div class="project-modal-actions">
           <button type="button" id="cancelEditProjectButton">Cancel</button>
@@ -136,12 +164,13 @@
   <nav class="nav">
     <a href="home.html"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 01-1 1h-4v-6h-6v6H5a1 1 0 01-1-1z"/></svg></a>
     <a href="calendar.html"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></a>
-    <a href="#" class="add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
-    <a href="detail.html" class="active"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
-    <a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
+    <a href="#" class="add" id="navAddAction" aria-label="Add task"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></a>
+    <a href="all-items.html?view=projects" aria-label="Projects"><svg viewBox="0 0 24 24"><path d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></a>
+    <a href="profile.html" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></a>
   </nav>
   <div class="home-indicator"></div>
 </div>
+    <script src="js/session.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/app.js"></script>
     <script src="js/detail.js"></script>
@@ -150,11 +179,3 @@
 <script src="js/integrated-upgrade.js"></script>
 </body>
 </html>
-
-
-
-
-
-
-
-
